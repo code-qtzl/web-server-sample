@@ -4,6 +4,7 @@ import 'dotenv/config';
 import apiRouter from './api/router.js';
 import { middlewareLogResponses } from './api/middleware.js';
 import { handlerMetrics, middlewareMetricsInc } from './api/metrics.js';
+import { handlerResetMetrics } from './api/reset.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -25,6 +26,9 @@ app.use('/api', apiRouter);
 
 // admin metrics endpoint
 app.get('/admin/metrics', handlerMetrics);
+
+// admin reset endpoint
+app.get('/admin/reset', handlerResetMetrics);
 
 app.listen(PORT, () => {
 	console.log(`Server is running at http://localhost:${PORT}`);

@@ -15,13 +15,11 @@ export function middlewareMetricsInc(
 
 // Handler to return current metrics, specifically the number of file server hits
 export function handlerMetrics(req: Request, res: Response) {
-	res.set('Content-Type', 'text/plain; charset=utf-8');
+	res.set('Content-Type', 'text/html; charset=utf-8');
 	res.send(
-		`<html>
-  <body>
-    <h1>Welcome, Chirpy Admin</h1>
-    <p>Chirpy has been visited NUM times!</p>
-  </body>
-</html>`.replace('NUM', config.fileserverHits.toString()),
+		`<h1>Welcome, Chirpy Admin</h1> \n <p>Chirpy has been visited NUM times!</p>`.replace(
+			'NUM',
+			config.fileserverHits.toString(),
+		),
 	);
 }
