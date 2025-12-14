@@ -1,13 +1,9 @@
 import express from 'express';
 import 'dotenv/config';
 
-import { handlerReadiness } from './api/readiness.js';
-import {
-	middlewareLogResponses,
-	middlewareMetricsInc,
-	handlerMetrics,
-	handlerResetMetrics,
-} from './api/middleware.js';
+import apiRouter from './api/router.js';
+import { middlewareLogResponses } from './api/middleware.js';
+import { middlewareMetricsInc } from './api/metrics.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -24,14 +20,8 @@ app.use(middlewareMetricsInc);
 // Serve static files from the ./src/app directory at the /app route
 app.use('/app', express.static('./src/app'));
 
-// Readiness endpoint
-app.get('/healthz', handlerReadiness);
-
-// registering handler for metrics
-app.get('/metrics', handlerMetrics);
-
-// registering handler for resetting metrics
-app.get('/reset', handlerResetMetrics);
+// Mount all API routes under /api namespace
+app.use('/api', apiRouter);
 
 app.listen(PORT, () => {
 	console.log(`Server is running at http://localhost:${PORT}`);
