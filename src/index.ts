@@ -18,17 +18,17 @@ app.use(middlewareLogResponses);
 // Middleware to count file server hits
 app.use(middlewareMetricsInc);
 
-// Serve static files from the ./src/app directory at the /app route
-app.use('/app', express.static('./src/app'));
-
-// Mount all API routes under /api namespace
-app.use('/api', apiRouter);
-
 // admin metrics endpoint
 app.get('/admin/metrics', handlerMetrics);
 
 // admin reset endpoint
-app.get('/admin/reset', handlerResetMetrics);
+app.post('/admin/reset', handlerResetMetrics);
+
+// Mount all API routes under /api namespace
+app.use('/api', apiRouter);
+
+// Serve static files from the ./src/app directory at the /app route
+app.use('/app', express.static('./src/app'));
 
 app.listen(PORT, () => {
 	console.log(`Server is running at http://localhost:${PORT}`);
