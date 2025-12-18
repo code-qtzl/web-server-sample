@@ -18,7 +18,9 @@ export function handlerValidateChirpy(
 
 		const maxChirpLength = 140;
 		if (body.length > maxChirpLength) {
-			throw new BadRequestError(`Chirp is too long. Max length is 140`);
+			throw new BadRequestError(
+				`Chirp is too long. Max length is ${maxChirpLength}`,
+			);
 		}
 
 		// Replace profane words with ****
