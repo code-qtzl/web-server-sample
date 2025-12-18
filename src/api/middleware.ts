@@ -1,5 +1,12 @@
 import type { Request, Response, NextFunction } from 'express';
 import { config } from '../config.js';
+import { respondWithError } from './json.js';
+import {
+	BadRequestError,
+	UserNotAuthenticatedError,
+	UserForbiddenError,
+	NotFoundError,
+} from './errors.js';
 
 // Middleware to log all responses with their status codes
 export async function middlewareLogResponses(
@@ -16,16 +23,33 @@ export async function middlewareLogResponses(
 	next();
 }
 
-// Handler to return current metrics, specifically the number of file server hits
-// export function handlerMetrics(req: Request, res: Response) {
-// 	res.set('Content-Type', 'text/plain; charset=utf-8');
-// 	res.send(`Hits: ${config.fileserverHits}`);
-// }
+// error-handling middleware that responds with 500 for unhandled errors.
+export function errorMiddleWare(
+	err: Error,
+	_: Request,
+	res: Response,
+	__: NextFunction,
+) {
+	let statusCode = 500;
+	let message = 'Something went wrong on our end';
 
-// Handler to reset the file server hit counter
-// export function handlerResetMetrics(req: Request, res: Response) {
-// 	const previousHits = config.fileserverHits;
-// 	config.fileserverHits = 0;
-// 	res.write(`Metrics reset from ${previousHits} to 0`);
-// 	res.end();
-// }
+	if (err instanceof BadRequestError) {
+		statusCode = 400;
+		message = err.message;
+	} else if (err instanceof UserNotAuthenticatedError) {
+		statusCode = 401;
+		message = err.message;
+	} else if (err instanceof UserForbiddenError) {
+		statusCode = 403;
+		message = err.message;
+	} else if (err instanceof NotFoundError) {
+		statusCode = 404;
+		message = err.message;
+	}
+
+	if (statusCode >= 500) {
+		console.log(err.message);
+	}
+
+	respondWithError(res, statusCode, message);
+}

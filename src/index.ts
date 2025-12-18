@@ -2,7 +2,7 @@ import express from 'express';
 import 'dotenv/config';
 
 import apiRouter from './api/router.js';
-import { middlewareLogResponses } from './api/middleware.js';
+import { errorMiddleWare, middlewareLogResponses } from './api/middleware.js';
 import { handlerMetrics, middlewareMetricsInc } from './api/metrics.js';
 import { handlerResetMetrics } from './api/reset.js';
 
@@ -29,6 +29,9 @@ app.use('/api', apiRouter);
 
 // Serve static files from the ./src/app directory at the /app route
 app.use('/app', express.static('./src/app'));
+
+// Error-handling middleware should be added after all other middleware and routes
+app.use(errorMiddleWare);
 
 app.listen(PORT, () => {
 	console.log(`Server is running at http://localhost:${PORT}`);
