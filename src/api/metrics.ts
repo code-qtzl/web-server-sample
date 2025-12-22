@@ -8,7 +8,7 @@ export function middlewareMetricsInc(
 	next: NextFunction,
 ) {
 	if (req.originalUrl.startsWith('/app')) {
-		config.fileserverHits += 1;
+		config.api.fileServerHits += 1;
 	}
 	next();
 }
@@ -19,7 +19,7 @@ export function handlerMetrics(req: Request, res: Response) {
 	res.send(
 		`<h1>Welcome, Chirpy Admin</h1> \n <p>Chirpy has been visited NUM times!</p>`.replace(
 			'NUM',
-			config.fileserverHits.toString(),
+			config.api.fileServerHits.toString(),
 		),
 	);
 }

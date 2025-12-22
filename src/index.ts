@@ -5,9 +5,17 @@ import apiRouter from './api/router.js';
 import { errorMiddleWare, middlewareLogResponses } from './api/middleware.js';
 import { handlerMetrics, middlewareMetricsInc } from './api/metrics.js';
 import { handlerResetMetrics } from './api/reset.js';
+import postgres from 'postgres';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import { config } from './config.js';
+import { createUsersHandler } from './api/users.js';
 
 const app = express();
 const PORT = process.env.PORT;
+
+const migrationClient = postgres(config.db.url, { max: 1 });
+await migrate(drizzle(migrationClient), config.db.migrationConfig);
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -23,6 +31,8 @@ app.get('/admin/metrics', handlerMetrics);
 
 // admin reset endpoint
 app.post('/admin/reset', handlerResetMetrics);
+
+app.post('/api/users', createUsersHandler);
 
 // Mount all API routes under /api namespace
 app.use('/api', apiRouter);
