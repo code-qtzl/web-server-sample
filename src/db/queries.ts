@@ -1,4 +1,4 @@
-import { db } from './index';
+import { db } from './index.js';
 import { NewUser, users } from './schema.js';
 
 export async function createUser(user: NewUser) {
@@ -8,4 +8,8 @@ export async function createUser(user: NewUser) {
 		.onConflictDoNothing()
 		.returning();
 	return result;
+}
+
+export async function deleteAllUsers() {
+	await db.delete(users);
 }
