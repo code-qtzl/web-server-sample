@@ -8,6 +8,13 @@
       "when": 1766261435910,
       "tag": "0000_sharp_vector",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1766890129922,
+      "tag": "0001_fancy_shooting_star",
+      "breakpoints": true
     }
   ]
 }

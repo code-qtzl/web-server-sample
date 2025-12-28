@@ -26,12 +26,14 @@ function envOrThrow(key: string) {
 	return value;
 }
 
+const migrationConfig: MigrationConfig = {
+	migrationsFolder: './src/db/generated',
+};
+
 export const config: Config = {
 	db: {
 		url: envOrThrow('DB_URL'),
-		migrationConfig: {
-			migrationsFolder: './src/db/generated',
-		},
+		migrationConfig: migrationConfig,
 	},
 	api: {
 		fileServerHits: 0,

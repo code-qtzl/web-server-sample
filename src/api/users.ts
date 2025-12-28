@@ -1,17 +1,29 @@
-import type { Request, Response, NextFunction } from 'express';
-import { config } from '../config.js';
+import type { Request, Response } from 'express';
 
-export function createUsersHandler(req: Request, res: Response) {
-	const { email } = req.body;
+import { createUser } from '../db/queries.js';
+import { BadRequestError } from './errors.js';
+import { respondWithJSON } from './json.js';
 
-	// Implementation for creating a user goes here
-	const userId = Math.random().toString(36).substr(2, 9); // Generate a simple ID
-	const now = new Date().toISOString();
+export async function createUsersHandler(req: Request, res: Response) {
+	type parameters = {
+		email: string;
+	};
+	const params: parameters = req.body;
 
-	res.status(201).json({
-		id: userId,
-		email: email,
-		createdAt: now,
-		updatedAt: now,
+	if (!params.email) {
+		throw new BadRequestError('Missing required fields');
+	}
+
+	const user = await createUser({ email: params.email });
+
+	if (!user) {
+		throw new Error('Could not create user');
+	}
+
+	respondWithJSON(res, 201, {
+		id: user.id,
+		email: user.email,
+		createdAt: user.createdAt,
+		updatedAt: user.updatedAt,
 	});
 }

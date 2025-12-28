@@ -1,5 +1,5 @@
 import { db } from './index.js';
-import { NewUser, users } from './schema.js';
+import { NewUser, users, NewChirp, chirps } from './schema.js';
 
 export async function createUser(user: NewUser) {
 	const [result] = await db
@@ -10,6 +10,11 @@ export async function createUser(user: NewUser) {
 	return result;
 }
 
-export async function deleteAllUsers() {
+export async function reset() {
 	await db.delete(users);
+}
+
+export async function createChirp(chirp: NewChirp) {
+	const [result] = await db.insert(chirps).values(chirp).returning();
+	return result;
 }
