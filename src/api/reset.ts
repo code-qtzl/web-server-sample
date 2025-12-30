@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { config } from '../config.js';
-import { reset } from '../db/queries.js';
+import { reset } from '../db/queries/users.js';
 import { UserForbiddenError } from './errors.js';
 
 export async function handlerResetMetrics(req: Request, res: Response) {

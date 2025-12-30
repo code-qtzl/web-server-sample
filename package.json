@@ -21,6 +21,9 @@
 		"typescript": "^5.9.3"
 	},
 	"dependencies": {
+		"@types/bcryptjs": "^2.4.6",
+		"argon2": "^0.44.0",
+		"bcryptjs": "^3.0.3",
 		"dotenv": "^17.2.3",
 		"drizzle-orm": "^0.45.1",
 		"express": "^5.2.1",

@@ -1,6 +1,10 @@
 import type { Request, Response } from 'express';
 
-import { createChirp, getAllChirps, getChirpById } from '../db/queries.js';
+import {
+	createChirp,
+	getAllChirps,
+	getChirpById,
+} from '../db/queries/chirps.js';
 import { BadRequestError, NotFoundError } from './errors.js';
 import { respondWithJSON } from './json.js';
 
