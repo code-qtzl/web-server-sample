@@ -12,6 +12,7 @@ export async function createUsersHandler(req: Request, res: Response) {
 	type parameters = {
 		email: string;
 		password: string;
+		expiresInSeconds?: number;
 	};
 	const params: parameters = req.body;
 

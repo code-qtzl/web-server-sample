@@ -9,8 +9,6 @@ import postgres from 'postgres';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { config } from './config.js';
-import { createUsersHandler } from './api/users.js';
-import { createChirpsHandler } from './api/chirps.js';
 
 const app = express();
 const PORT = process.env.PORT;

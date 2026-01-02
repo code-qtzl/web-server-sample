@@ -7,20 +7,26 @@ import {
 } from '../db/queries/chirps.js';
 import { BadRequestError, NotFoundError } from './errors.js';
 import { respondWithJSON } from './json.js';
+import { getBearerToken, validateJWT } from '../auth.js';
+import { config } from '../config.js';
 
 export async function createChirpsHandler(req: Request, res: Response) {
 	type parameters = {
-		userId: string;
 		body: string;
 	};
 	const params: parameters = req.body;
 
-	if (!params.userId || !params.body) {
+	if (!params.body) {
 		throw new BadRequestError('Missing required fields');
 	}
 
+	// Extract and validate JWT
+	const authHeader = req.headers.authorization;
+	const token = getBearerToken(req);
+	const userId = validateJWT(token, config.jwt.secret);
+
 	const chirp = await createChirp({
-		userId: params.userId,
+		userId: userId,
 		content: params.body,
 	});
 
