@@ -10,6 +10,7 @@ import {
 	getChirpByIdHandler,
 } from './chirps.js';
 import { createLoginHandler } from './auth.js';
+import { refreshHandler } from './refresh.js';
 
 const apiRouter = Router();
 
@@ -44,5 +45,8 @@ apiRouter.get('/chirps/:chirpId', asyncHandler(getChirpByIdHandler));
 
 // Login endpoint: /api/login
 apiRouter.post('/login', asyncHandler(createLoginHandler));
+
+// Refresh endpoint: /api/refresh
+apiRouter.post('/refresh', asyncHandler(refreshHandler));
 
 export default apiRouter;
