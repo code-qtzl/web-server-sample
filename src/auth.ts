@@ -1,6 +1,7 @@
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import type { JwtPayload } from 'jsonwebtoken';
+import { randomBytes } from 'crypto';
 
 import { BadRequestError, UserNotAuthenticatedError } from './api/errors.js';
 import { Request } from 'express';
@@ -56,6 +57,10 @@ export function validateJWT(tokenString: string, secret: string) {
 	}
 
 	return decoded.sub;
+}
+
+export function makeRefreshToken(): string {
+	return randomBytes(32).toString('hex');
 }
 
 export function getBearerToken(req: Request) {

@@ -11,6 +11,7 @@ import {
 } from './chirps.js';
 import { createLoginHandler } from './auth.js';
 import { refreshHandler } from './refresh.js';
+import { revokeHandler } from './revoke.js';
 
 const apiRouter = Router();
 
@@ -48,5 +49,8 @@ apiRouter.post('/login', asyncHandler(createLoginHandler));
 
 // Refresh endpoint: /api/refresh
 apiRouter.post('/refresh', asyncHandler(refreshHandler));
+
+// Revoke endpoint: /api/revoke
+apiRouter.post('/revoke', asyncHandler(revokeHandler));
 
 export default apiRouter;

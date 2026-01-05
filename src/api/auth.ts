@@ -2,7 +2,7 @@ import type { Request, Response } from 'express';
 
 import { UserNotAuthenticatedError } from './errors.js';
 import { respondWithJSON } from './json.js';
-import { checkPasswordHash, makeJWT } from '../auth.js';
+import { checkPasswordHash, makeJWT, makeRefreshToken } from '../auth.js';
 import { getUserByEmail } from '../db/queries/users.js';
 import { createRefreshToken } from '../db/queries/refreshTokens.js';
 import { UserResponse } from './users.js';
@@ -23,6 +23,11 @@ export async function createLoginHandler(req: Request, res: Response) {
 	const params: parameters = req.body;
 
 	const user = await getUserByEmail(params.email);
+	console.log(
+		`Login attempt for email=${params.email} user_found=${Boolean(
+			user,
+		)} user_id=${user?.id ?? 'none'}`,
+	);
 	if (!user) {
 		throw new UserNotAuthenticatedError('invalid username or password');
 	}
@@ -30,6 +35,11 @@ export async function createLoginHandler(req: Request, res: Response) {
 	const matching = await checkPasswordHash(
 		params.password,
 		user.hashed_password,
+	);
+	console.log(
+		`Password provided=${
+			params.password ? 'yes' : 'no'
+		} password_match=${matching}`,
 	);
 	if (!matching) {
 		throw new UserNotAuthenticatedError('invalid username or password');
@@ -42,8 +52,25 @@ export async function createLoginHandler(req: Request, res: Response) {
 		config.jwt.secret,
 	);
 
-	// Create refresh token with 60 day expiration in database
-	const refreshToken = await createRefreshToken(user.id);
+	// Create refresh token string and persist it in the database with 60 day expiration
+	let refreshToken;
+	try {
+		const tokenStr = makeRefreshToken();
+		console.log(`Creating refresh token for user ${user.id}`);
+		refreshToken = await createRefreshToken(user.id, tokenStr);
+		console.log('Created refresh token:', refreshToken);
+	} catch (err: any) {
+		console.log('Error creating refresh token:', err?.message ?? err);
+		throw new Error('failed to create refresh token');
+	}
+
+	if (!refreshToken || !refreshToken.token) {
+		console.log(
+			'Refresh token creation returned invalid value:',
+			refreshToken,
+		);
+		throw new Error('failed to create refresh token');
+	}
 
 	respondWithJSON(res, 200, {
 		id: user.id,
@@ -53,8 +80,4 @@ export async function createLoginHandler(req: Request, res: Response) {
 		token: accessToken,
 		refreshToken: refreshToken.token,
 	} satisfies LoginResponse);
-}
-
-export function makeRefreshToken(): string {
-	return randomBytes(32).toString('hex');
 }
