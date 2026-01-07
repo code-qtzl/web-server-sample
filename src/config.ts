@@ -1,4 +1,5 @@
 import type { MigrationConfig } from 'drizzle-orm/migrator';
+import jwt from 'jsonwebtoken';
 
 type Config = {
 	api: APIConfig;
@@ -22,6 +23,7 @@ type JWTConfig = {
 	refreshDuration: number;
 	secret: string;
 	issuer: string;
+	verify: (token: string, secret: string) => Promise<unknown>; // function to verify token
 };
 
 process.loadEnvFile();
@@ -53,5 +55,13 @@ export const config: Config = {
 		refreshDuration: 60 * 60 * 24 * 60 * 1000, // 60 days in milliseconds
 		secret: envOrThrow('JWT_SECRET'),
 		issuer: 'chirpy',
+		verify: async (token: string, secret: string) => {
+			try {
+				const decoded = jwt.verify(token, secret);
+				return decoded;
+			} catch (err) {
+				throw err;
+			}
+		},
 	},
 };

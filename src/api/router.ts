@@ -3,7 +3,7 @@ import { handlerReadiness } from './readiness.js';
 // import { handlerMetrics } from './metrics.js';
 import { handlerResetMetrics } from './reset.js';
 import { handlerValidateChirpy } from './validate.js';
-import { createUsersHandler } from './users.js';
+import { handlerUsersCreate, handlerUsersUpdate } from './users.js';
 import {
 	createChirpsHandler,
 	getAllChirpsHandler,
@@ -37,7 +37,8 @@ apiRouter.post('/reset', handlerResetMetrics);
 apiRouter.post('/validate_chirp', handlerValidateChirpy);
 
 // Users endpoint: /api/users
-apiRouter.post('/users', asyncHandler(createUsersHandler));
+apiRouter.post('/users', asyncHandler(handlerUsersCreate));
+apiRouter.put('/users', asyncHandler(handlerUsersUpdate));
 
 // Chirps endpoints: /api/chirps
 apiRouter.get('/chirps', asyncHandler(getAllChirpsHandler));
