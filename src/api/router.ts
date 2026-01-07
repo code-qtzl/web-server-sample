@@ -9,7 +9,7 @@ import {
 	getAllChirpsHandler,
 	getChirpByIdHandler,
 } from './chirps.js';
-import { createLoginHandler } from './auth.js';
+import { handlerLogin } from './auth.js';
 import { refreshHandler } from './refresh.js';
 import { handlerRevoke } from './revoke.js';
 
@@ -46,7 +46,7 @@ apiRouter.post('/chirps', asyncHandler(createChirpsHandler));
 apiRouter.get('/chirps/:chirpId', asyncHandler(getChirpByIdHandler));
 
 // Login endpoint: /api/login
-apiRouter.post('/login', asyncHandler(createLoginHandler));
+apiRouter.post('/login', asyncHandler(handlerLogin));
 
 // Refresh endpoint: /api/refresh
 apiRouter.post('/refresh', asyncHandler(refreshHandler));

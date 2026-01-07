@@ -22,7 +22,7 @@ type LoginResponse = UserResponse & {
 	refreshToken: string;
 };
 
-export async function createLoginHandler(req: Request, res: Response) {
+export async function handlerLogin(req: Request, res: Response) {
 	type parameters = {
 		password: string;
 		email: string;
@@ -42,7 +42,7 @@ export async function createLoginHandler(req: Request, res: Response) {
 
 	const matching = await checkPasswordHash(
 		params.password,
-		user.hashed_password,
+		user.hashedPassword,
 	);
 	console.log(
 		`Password provided=${
@@ -66,7 +66,7 @@ export async function createLoginHandler(req: Request, res: Response) {
 		throw new UserNotAuthenticatedError('could not save refresh token');
 	}
 
-	respondWithJSON(res, 200, {
+	respondWithJSON(res, 20, {
 		id: user.id,
 		email: user.email,
 		createdAt: user.createdAt,
