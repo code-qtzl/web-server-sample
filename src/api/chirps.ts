@@ -85,29 +85,21 @@ export async function getChirpByIdHandler(req: Request, res: Response) {
 }
 
 export async function deleteChirpByIdHandler(req: Request, res: Response) {
-	const chirpId = req.params.chirpId?.trim();
+	const { chirpId } = req.params;
 
-	if (!chirpId) {
-		throw new BadRequestError('Invalid chirp ID');
-	}
-
-	// Extract and validate JWT
-	const authHeader = req.headers.authorization;
 	const token = getBearerToken(req);
 	const userId = validateJWT(token, config.jwt.secret);
 
 	const chirp = await getChirpById(chirpId);
-
 	if (!chirp) {
-		throw new NotFoundError('Chirp not found');
+		throw new NotFoundError(`Chirp with chirpId: ${chirpId} not found`);
 	}
 
 	if (chirp.userId !== userId) {
-		throw new UserForbiddenError('Unauthorized to delete this chirp');
+		throw new UserForbiddenError("You can't delete this chirp");
 	}
 
 	await deleteChirp(chirpId);
 
-	// 204 No Content: successful deletion with no body
 	res.status(204).send();
 }

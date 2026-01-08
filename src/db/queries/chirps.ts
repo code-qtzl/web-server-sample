@@ -13,10 +13,11 @@ export async function getAllChirps() {
 }
 
 export async function getChirpById(id: string) {
-	const result = await db.select().from(chirps).where(eq(chirps.id, id));
-	return result[0];
+	const [result] = await db.select().from(chirps).where(eq(chirps.id, id));
+	return result;
 }
 
 export async function deleteChirp(id: string) {
-	await db.delete(chirps).where(eq(chirps.id, id));
+	const rows = await db.delete(chirps).where(eq(chirps.id, id)).returning();
+	return rows.length > 0;
 }
