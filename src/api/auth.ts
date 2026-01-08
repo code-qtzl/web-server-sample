@@ -66,7 +66,7 @@ export async function handlerLogin(req: Request, res: Response) {
 		throw new UserNotAuthenticatedError('could not save refresh token');
 	}
 
-	respondWithJSON(res, 20, {
+	respondWithJSON(res, 200, {
 		id: user.id,
 		email: user.email,
 		createdAt: user.createdAt,

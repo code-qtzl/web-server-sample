@@ -8,6 +8,7 @@ import {
 	createChirpsHandler,
 	getAllChirpsHandler,
 	getChirpByIdHandler,
+	deleteChirpByIdHandler,
 } from './chirps.js';
 import { handlerLogin } from './auth.js';
 import { refreshHandler } from './refresh.js';
@@ -44,6 +45,7 @@ apiRouter.put('/users', asyncHandler(handlerUsersUpdate));
 apiRouter.get('/chirps', asyncHandler(getAllChirpsHandler));
 apiRouter.post('/chirps', asyncHandler(createChirpsHandler));
 apiRouter.get('/chirps/:chirpId', asyncHandler(getChirpByIdHandler));
+apiRouter.delete('/chirps/:chirpId', asyncHandler(deleteChirpByIdHandler));
 
 // Login endpoint: /api/login
 apiRouter.post('/login', asyncHandler(handlerLogin));
