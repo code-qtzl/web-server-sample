@@ -7,7 +7,13 @@ import { hashPassword, getBearerToken, validateJWT } from '../auth.js';
 import { NewUser } from '../db/schema.js';
 import { config } from '../config.js';
 
-export type UserResponse = Omit<NewUser, 'hashedPassword'>;
+export type UserResponse = {
+	id: string;
+	createdAt: Date;
+	updatedAt: Date;
+	email: string;
+	isChirpyRed: boolean;
+};
 
 export async function handlerUsersCreate(req: Request, res: Response) {
 	type parameters = {
@@ -36,6 +42,7 @@ export async function handlerUsersCreate(req: Request, res: Response) {
 		email: user.email,
 		createdAt: user.createdAt,
 		updatedAt: user.updatedAt,
+		isChirpyRed: user.isChirpyRed,
 	} satisfies UserResponse);
 }
 
@@ -63,5 +70,6 @@ export async function handlerUsersUpdate(req: Request, res: Response) {
 		createdAt: user.createdAt,
 		updatedAt: user.updatedAt,
 		email: user.email,
+		isChirpyRed: user.isChirpyRed,
 	} satisfies UserResponse);
 }

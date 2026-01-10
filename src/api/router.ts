@@ -13,6 +13,7 @@ import {
 import { handlerLogin } from './auth.js';
 import { refreshHandler } from './refresh.js';
 import { handlerRevoke } from './revoke.js';
+import { handlerWebhooks } from './webhooks.js';
 
 const apiRouter = Router();
 
@@ -55,5 +56,8 @@ apiRouter.post('/refresh', asyncHandler(refreshHandler));
 
 // Revoke endpoint: /api/revoke
 apiRouter.post('/revoke', asyncHandler(handlerRevoke));
+
+// Polka payment provider: /api/polka/webhooks
+apiRouter.post('/polka/webhooks', asyncHandler(handlerWebhooks));
 
 export default apiRouter;

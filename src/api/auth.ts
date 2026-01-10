@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 
-import { UserNotAuthenticatedError } from './errors.js';
+import { UserNotAuthenticatedError, BadRequestError } from './errors.js';
 import { respondWithJSON } from './json.js';
 import {
 	checkPasswordHash,
@@ -71,9 +71,28 @@ export async function handlerLogin(req: Request, res: Response) {
 		email: user.email,
 		createdAt: user.createdAt,
 		updatedAt: user.updatedAt,
+		isChirpyRed: user.isChirpyRed,
 		token: accessToken,
 		refreshToken: refreshToken,
 	} satisfies LoginResponse);
+}
+
+// get API key from request headers
+export function getAPIKey(req: Request) {
+	const authHeader = req.get('Authorization');
+	if (!authHeader) {
+		throw new UserNotAuthenticatedError('Malformed authorization header');
+	}
+
+	return extractApiKey(authHeader);
+}
+
+export function extractApiKey(header: string) {
+	const splitAuth = header.split(' ');
+	if (splitAuth.length < 2 || splitAuth[0] !== 'ApiKey') {
+		throw new BadRequestError('Malformed authorization header');
+	}
+	return splitAuth[1];
 }
 
 // found in api/refresh.ts and api/revoke.ts
