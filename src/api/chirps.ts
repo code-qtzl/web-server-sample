@@ -5,6 +5,7 @@ import {
 	getAllChirps,
 	getChirpById,
 	deleteChirp,
+	getChirpsByAuthor,
 } from '../db/queries/chirps.js';
 import {
 	BadRequestError,
@@ -49,7 +50,15 @@ export async function createChirpsHandler(req: Request, res: Response) {
 }
 
 export async function getAllChirpsHandler(req: Request, res: Response) {
-	const chirps = await getAllChirps();
+	const authorId = req.query.authorId as string | undefined;
+	const sort = req.query.sort as string | undefined;
+
+	// Validate sort parameter
+	const sortOrder: 'asc' | 'desc' = sort === 'desc' ? 'desc' : 'asc';
+
+	const chirps = authorId
+		? await getChirpsByAuthor(authorId, sortOrder)
+		: await getAllChirps(sortOrder);
 
 	const formattedChirps = chirps.map((chirp) => ({
 		id: chirp.id,
@@ -57,6 +66,7 @@ export async function getAllChirpsHandler(req: Request, res: Response) {
 		body: chirp.content,
 		createdAt: chirp.createdAt,
 		updatedAt: chirp.updatedAt,
+		sort: chirp.createdAt.getTime(),
 	}));
 
 	respondWithJSON(res, 200, formattedChirps);
